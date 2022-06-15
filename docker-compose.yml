@@ -4,7 +4,7 @@ services:
         image: nginx:1.18.0
         volumes:
           - ./nginx/etc:/etc/nginx:cached
-          - ../www:/www:cached
+          - ../../awww:/www:cached
         container_name: my-nginx
         ports:
           - "80:80"
@@ -17,13 +17,28 @@ services:
             dockerfile: Dockerfile
         volumes:
           - ./php/5.6/etc:/usr/local/etc:cached
-          - ../www:/www:cached
+          - ../../awww:/www:cached
         container_name: my-php56
         expose:
           - "9000"
         networks:
             backend:
                 ipv4_address: 172.19.0.3
+    php56-pthreads:
+        build:
+            context: ./php/pthreads_5.6
+            dockerfile: Dockerfile
+        volumes:
+            - ./php/pthreads_5.6/etc:/usr/local/etc:cached
+            - ../../awww:/www:cached
+        container_name: my-php56-pthreads
+        stdin_open: true
+        tty: true
+        expose:
+            - "9005"
+        networks:
+            backend:
+                ipv4_address: 172.19.0.15
     db:
         image: mysql:5.6
         ports:
@@ -31,7 +46,7 @@ services:
         environment:
             - MYSQL_ROOT_PASSWORD=123456
         volumes:
-          - ../dockerMap/mysql/data:/var/lib/mysql:cached
+          - ../mysqldata:/var/lib/mysql:cached
         container_name: my-mysql
         networks:
             backend:
