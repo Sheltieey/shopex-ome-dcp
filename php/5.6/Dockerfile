@@ -5,3 +5,10 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions bcmath gd mcrypt memcache memcached mongo mysql redis soap zip ldap igbinary imagick
 
 COPY zend-loader-php5.6-linux-x86_64/ZendGuardLoader.so zend-loader-php5.6-linux-x86_64/opcache.so /usr/local/lib/php/extensions/no-debug-non-zts-20131226/
+
+RUN apt-get update \
+    && apt-get install procps
+
+COPY docker-run-cmd.sh /tmp/
+RUN chmod +x /tmp/docker-run-cmd.sh
+ENTRYPOINT /bin/bash -c /tmp/docker-run-cmd.sh
